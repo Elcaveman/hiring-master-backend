@@ -10,8 +10,9 @@ import com.example.hiringMaster.services.ActivityService;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/activities")
 public class ActivityController {
     private final ActivityService activityService;
     @Autowired
@@ -19,15 +20,15 @@ public class ActivityController {
         this.activityService = activityService;
     }
 
-    @GetMapping("/activity")
+    @GetMapping("")
     public ResponseEntity<List<Activity>> getActivities(){
         return ResponseEntity.status(HttpStatus.OK).body(activityService.getActivities());
     }
-    @GetMapping("/activity/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Optional<Activity>> getActivity(@PathVariable("id") long activityId){
         return ResponseEntity.status(HttpStatus.OK).body(activityService.getActivitiyById(activityId));
     }
-    @PostMapping("/activity")
+    @PostMapping("")
     public ResponseEntity<Activity> addActivity(Activity activity){
         return ResponseEntity.status(HttpStatus.OK).body(activityService.addActivity(activity));
     }

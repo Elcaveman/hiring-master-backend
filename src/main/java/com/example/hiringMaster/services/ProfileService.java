@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProfileService {
@@ -17,7 +18,11 @@ public class ProfileService {
         this.profileRepository = profileRepository;
     }
 
-    public List<Profile> getProfiles(/*criterias*/){
+    public List<Profile> getProfiles(){
         return profileRepository.findAll();
+    }
+
+    public Optional<Profile> getProfileById(Long profileId) {
+        return profileRepository.findById(profileId);
     }
 }
