@@ -33,13 +33,13 @@ public class ActivityController {
         return ResponseEntity.status(HttpStatus.OK).body(activityService.addActivity(activity));
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteActivity(@PathVariable("id") long activityId){
+    public ResponseEntity<Void> deleteActivity(@PathVariable("id") long activityId){
         try{
             activityService.deleteActivity(activityId);
-            return ResponseEntity.status(HttpStatus.OK).body("Activity with id: {} was deleted!");
+            return ResponseEntity.status(HttpStatus.OK).body(null);
         }
         catch(Exception e){
-            return ResponseEntity.status(HttpStatus.OK).body("Activity with id: {} was deleted!");
+            return ResponseEntity.status(HttpStatus.OK).body(null);
         }
     }
 }

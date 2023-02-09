@@ -23,6 +23,10 @@ public class Profile {
     @JsonIgnore
     private List<Activity> ownedActivityList;
 
+    @OneToMany(mappedBy = "candidate")
+    @JsonIgnore
+    private List<Activity> candidateActivityList;
+
     @ManyToMany(mappedBy = "participants")
     @JsonIgnore
     private List<Activity> participatedInActivityList;

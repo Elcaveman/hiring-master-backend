@@ -29,9 +29,11 @@ public class Activity {
     private List<Profile> participants;
     private String description;
     @ManyToOne
-    @JoinColumn(name="profile_id")
+    @JoinColumn(name="owner_id")
     private Profile owner;
-
+    @ManyToOne
+    @JoinColumn(name="candidate_id")
+    private Profile candidate;
     private String subActivities;
     private String job;
     private String address;
