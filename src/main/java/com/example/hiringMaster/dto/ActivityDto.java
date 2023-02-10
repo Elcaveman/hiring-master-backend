@@ -1,26 +1,30 @@
-package com.example.hiringMaster.models;
-import jakarta.persistence.*;
-import lombok.*;
+package com.example.hiringMaster.dto;
+
+import com.example.hiringMaster.models.Activity;
+import com.example.hiringMaster.models.Profile;
+import lombok.Builder;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
-@Entity
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class Activity {
-    public static enum ActivityTypes {
-        INTERVIEW,REUNION,TASK,REMINDER
-    }
-    @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+public class ActivityDto {
     private Long id;
     private String visibility;
     private String comment;
     private String title;
     private Date time;
+    private List<Profile> participants;
+    private String description;
+    private Profile owner;
+    private Profile candidate;
+    private String subActivities;
+    private String job;
+    private String address;
+    private String medium;
+    private String type;
+    private Activity.ActivityTypes activityType;
+    private Date deadline;
 
     public Date getDeadline() {
         return deadline;
@@ -30,36 +34,8 @@ public class Activity {
         this.deadline = deadline;
     }
 
-    private Date deadline;
-    @ManyToMany
-    @JoinTable(
-            name="activity_profile_participation",
-            joinColumns = @JoinColumn(name="activity_id"),
-            inverseJoinColumns = @JoinColumn(name="profile_id")
-    )
-    private List<Profile> participants;
-    private String description;
-    @ManyToOne
-    @JoinColumn(name="owner_id")
-    private Profile owner;
-    @ManyToOne
-    @JoinColumn(name="candidate_id")
-    private Profile candidate;
-    private String subActivities;
-    private String job;
-    private String address;
-    private String medium;
-    private String type;
-    private ActivityTypes activityType;
     private boolean finished;
 
-    public Profile getCandidate() {
-        return candidate;
-    }
-
-    public void setCandidate(Profile candidate) {
-        this.candidate = candidate;
-    }
     public Long getId() {
         return id;
     }
@@ -124,6 +100,14 @@ public class Activity {
         this.owner = owner;
     }
 
+    public Profile getCandidate() {
+        return candidate;
+    }
+
+    public void setCandidate(Profile candidate) {
+        this.candidate = candidate;
+    }
+
     public String getSubActivities() {
         return subActivities;
     }
@@ -164,11 +148,11 @@ public class Activity {
         this.type = type;
     }
 
-    public ActivityTypes getActivityType() {
+    public Activity.ActivityTypes getActivityType() {
         return activityType;
     }
 
-    public void setActivityType(ActivityTypes activityType) {
+    public void setActivityType(Activity.ActivityTypes activityType) {
         this.activityType = activityType;
     }
 
@@ -179,10 +163,4 @@ public class Activity {
     public void setFinished(boolean finished) {
         this.finished = finished;
     }
-
-    @Override
-    public String toString() {
-        return "Activity: "+this.id+" "+this.title;
-    }
-
 }

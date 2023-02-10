@@ -33,4 +33,6 @@ public class ProfileController {
                 .status(HttpStatus.OK)
                 .body(profileService.getProfileById(profileId));
     }
+
+
 }

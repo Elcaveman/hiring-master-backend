@@ -1,5 +1,6 @@
 package com.example.hiringMaster.controllers;
 
+import com.example.hiringMaster.dto.ActivityDto;
 import com.example.hiringMaster.models.Activity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,12 @@ public class ActivityController {
     @PostMapping("")
     public ResponseEntity<Activity> addActivity(Activity activity){
         return ResponseEntity.status(HttpStatus.OK).body(activityService.addActivity(activity));
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateActivity(@PathVariable("id") long activityId, ActivityDto activityDto){
+        activityDto.setId(activityId);
+        activityService.updateActivity(activityDto);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteActivity(@PathVariable("id") long activityId){

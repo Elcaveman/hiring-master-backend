@@ -1,5 +1,6 @@
 package com.example.hiringMaster.services;
 
+import com.example.hiringMaster.dto.ActivityDto;
 import com.example.hiringMaster.models.Activity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,5 +30,19 @@ public class ActivityService {
 
     public void deleteActivity(Long activityId){
         activityRepository.deleteById(activityId);
+    }
+
+    public void updateActivity(ActivityDto activityDto) {
+        Optional<Activity> updatedActivity = activityRepository.findById(activityDto.getId());
+        if ( updatedActivity.isPresent()){
+            Activity a = updatedActivity.get();
+            a.setTitle(activityDto.getTitle());
+            a.setTime(activityDto.getTime());
+            a.setParticipants(activityDto.getParticipants());
+            a.setCandidate(activityDto.getCandidate());
+            a.setFinished(activityDto.isFinished());
+            a.setDeadline(activityDto.getDeadline());
+            activityRepository.save(a);
+        }
     }
 }
