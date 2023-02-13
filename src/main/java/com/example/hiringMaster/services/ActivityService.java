@@ -1,7 +1,11 @@
 package com.example.hiringMaster.services;
 
-import com.example.hiringMaster.dto.ActivityDto;
+import com.example.hiringMaster.dto.activity.ActivityDto;
 import com.example.hiringMaster.models.Activity;
+import org.modelmapper.Condition;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.hiringMaster.repositories.ActivityRepository;
@@ -12,6 +16,7 @@ import java.util.Optional;
 @Service
 public class ActivityService {
     private final ActivityRepository activityRepository;
+    private final ModelMapper mapper = new ModelMapper();
     @Autowired
     public ActivityService(ActivityRepository activityRepository) {
         this.activityRepository = activityRepository;
@@ -33,16 +38,15 @@ public class ActivityService {
     }
 
     public void updateActivity(ActivityDto activityDto) {
-        Optional<Activity> updatedActivity = activityRepository.findById(activityDto.getId());
-        if ( updatedActivity.isPresent()){
-            Activity a = updatedActivity.get();
-            a.setTitle(activityDto.getTitle());
-            a.setTime(activityDto.getTime());
-            a.setParticipants(activityDto.getParticipants());
-            a.setCandidate(activityDto.getCandidate());
-            a.setFinished(activityDto.isFinished());
-            a.setDeadline(activityDto.getDeadline());
-            activityRepository.save(a);
+        this.mapper.getConfiguration().setSkipNullEnabled(true);
+        this.mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE );
+        Optional<Activity> originalActivity = activityRepository.findById(activityDto.getId());
+        if ( originalActivity.isPresent()){
+            Activity a = originalActivity.get();
+            Activity copyActivity = a.toBuilder().build();//copy object using a builder
+            this.mapper.map(activityDto,copyActivity);//change id
+            System.out.println(copyActivity.getId());
+            //activityRepository.save(a);
         }
     }
 }

@@ -9,7 +9,7 @@ import java.util.Set;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
+@Builder(toBuilder=true)
 public class Activity {
     public static enum ActivityTypes {
         INTERVIEW,REUNION,TASK,REMINDER
