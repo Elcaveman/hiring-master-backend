@@ -61,8 +61,11 @@ public class ActivityService {
             Activity copyActivity = a.toBuilder().build();//copy object using a builder
             this.mapper.map(activityDto,copyActivity);//change id
             // TODO: set composite fields (Entities) automatically
-            Profile candidate = this.profileService.getProfileById(activityDto.getCandidate().getId()).orElse(null);
             List<Profile> participants = new ArrayList<>();
+            Profile candidate = null;
+            if(activityDto.getCandidate()!=null)
+                candidate = this.profileService.getProfileById(activityDto.getCandidate().getId()).orElse(null);
+
             if (activityDto.getParticipants()!=null)
                 participants = this.profileService.getProfileAllById(activityDto.getParticipants()
                         .stream().map(participant->participant.getId())
