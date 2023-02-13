@@ -25,4 +25,7 @@ public class ProfileService {
     public Optional<Profile> getProfileById(Long profileId) {
         return profileRepository.findById(profileId);
     }
+    public List<Profile> getProfileAllById(List<Long> profileIds ) {
+        return profileRepository.findAllById(profileIds);
+    }
 }

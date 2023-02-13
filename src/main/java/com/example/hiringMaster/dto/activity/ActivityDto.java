@@ -1,7 +1,7 @@
 package com.example.hiringMaster.dto.activity;
 
+import com.example.hiringMaster.dto.profile.ProfileIdDto;
 import com.example.hiringMaster.models.Activity;
-import com.example.hiringMaster.models.Profile;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -19,9 +19,9 @@ public class ActivityDto {
     private String title;
     private Date time;
     private String description;
-    private List<Profile> participants;
-    private Profile owner;// should be fetched from userPrincipal
-    private Profile candidate;
+    private List<ProfileIdDto> participants;
+    private ProfileIdDto owner;// should be fetched from userPrincipal
+    private ProfileIdDto candidate;
     private String subActivities;
     private String job;
     private String address;

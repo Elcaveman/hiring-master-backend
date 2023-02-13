@@ -52,11 +52,9 @@ public class Activity {
     private String type;
     private ActivityTypes activityType;
     private boolean finished;
-
     public Profile getCandidate() {
         return candidate;
     }
-
     public void setCandidate(Profile candidate) {
         this.candidate = candidate;
     }
