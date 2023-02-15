@@ -1,11 +1,11 @@
 package com.example.hiringMaster.services;
 
 import com.example.hiringMaster.mapper.CustomModelMapper;
-import com.example.hiringMaster.converters.ProfileIdDtoToProfileConverter;
 import com.example.hiringMaster.dto.activity.ActivityDto;
 import com.example.hiringMaster.dto.profile.ProfileIdDto;
 import com.example.hiringMaster.models.Activity;
 import com.example.hiringMaster.models.Profile;
+import com.example.hiringMaster.repositories.ProfileRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,11 +16,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 public class ActivityService {
     private final ActivityRepository activityRepository;
-    private final ProfileService profileService;
+    private final ProfileRepository profileRepository;
     private final ModelMapper mapper = CustomModelMapper.modelMapper();
     private TypeMap<ActivityDto,Activity> dto2ActivityTypeMap;
     private TypeMap<ProfileIdDto,Profile> dto2ProfileTypeMap;
@@ -28,8 +29,8 @@ public class ActivityService {
 //    private final ProfileIdDtoListToProfileConverter profileIdDtoListToProfileConverter;
 
     @Autowired
-    public ActivityService(ActivityRepository activityRepository, ProfileService profileService) {
-        this.profileService = profileService;
+    public ActivityService(ActivityRepository activityRepository, ProfileRepository profileRepository) {
+        this.profileRepository = profileRepository;
         this.activityRepository = activityRepository;
 //        this.dto2ActivityTypeMap =  this.mapper.createTypeMap(ActivityDto.class, Activity.class);
 //        this.dto2ProfileTypeMap =  this.mapper.createTypeMap(ProfileIdDto.class, Profile.class);
@@ -64,10 +65,10 @@ public class ActivityService {
             List<Profile> participants = new ArrayList<>();
             Profile candidate = null;
             if(activityDto.getCandidate()!=null)
-                candidate = this.profileService.getProfileById(activityDto.getCandidate().getId()).orElse(null);
+                candidate = this.profileRepository.findById(activityDto.getCandidate().getId()).orElse(null);
 
             if (activityDto.getParticipants()!=null)
-                participants = this.profileService.getProfileAllById(activityDto.getParticipants()
+                participants = this.profileRepository.findAllById(activityDto.getParticipants()
                         .stream().map(participant->participant.getId())
                         .collect(Collectors.toList())
                 );
@@ -75,5 +76,24 @@ public class ActivityService {
             copyActivity.setParticipants(participants);
             activityRepository.save(copyActivity);
         }
+    }
+
+    public List<Activity> finishActivities(List<ActivityDto> activityDtoList) {
+        List<Long> activityIdList = activityDtoList.stream()
+                .map(activityDto -> activityDto.getId())
+                .collect(Collectors.toList());
+        List<Activity> activityList = this.activityRepository.findAllById(activityIdList);
+        List<Activity> updatedActivityList = IntStream
+                .range(0, activityList.size())
+                .filter((i)-> {
+                    if (activityList.get(i) == null) return false;
+                    else {
+                        activityList.get(i).setFinished(activityDtoList.get(i).getFinished());
+                        return true;
+                    }})
+                .mapToObj(i -> activityList.get(i))
+                .collect(Collectors.toList());
+        return this.activityRepository.saveAll(updatedActivityList);
+
     }
 }

@@ -39,6 +39,11 @@ public class ActivityController {
         activityService.updateActivity(activityDto);
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
+    @PutMapping("/finish")
+    public ResponseEntity<List<Activity>> finishActivities(@RequestBody List<ActivityDto> activityDtoList){
+        List<Activity> updatedActivities = activityService.finishActivities(activityDtoList);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedActivities);
+    }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteActivity(@PathVariable("id") long activityId){
         try{
