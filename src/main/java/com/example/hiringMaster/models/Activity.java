@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Set;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder(toBuilder=true)
 public class Activity {
     public static enum ActivityTypes {
@@ -46,7 +46,9 @@ public class Activity {
     @JoinColumn(name="candidate_id")
     private Profile candidate;
     private String subActivities;
-    private String job;
+    @ManyToOne
+    @JoinColumn(name="job_id")
+    private Job job;
     private String address;
     private String medium;
     private String type;
@@ -130,11 +132,11 @@ public class Activity {
         this.subActivities = subActivities;
     }
 
-    public String getJob() {
+    public Job getJob() {
         return job;
     }
 
-    public void setJob(String job) {
+    public void setJob(Job job) {
         this.job = job;
     }
 

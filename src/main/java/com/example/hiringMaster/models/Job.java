@@ -1,5 +1,6 @@
 package com.example.hiringMaster.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,8 +9,8 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder(toBuilder = true)
 public class Job {
     @Id
@@ -18,11 +19,13 @@ public class Job {
     private String title;
     @ManyToOne
     @JoinColumn(name="parent_id")
+    @JsonIgnore
     private Job parentJob;
-
     @OneToMany(mappedBy = "parentJob")
     private List<Job> childJobs;
 
+    @OneToMany(mappedBy = "job")
+    private List<Activity> activityList;
     public Long getId() {
         return id;
     }

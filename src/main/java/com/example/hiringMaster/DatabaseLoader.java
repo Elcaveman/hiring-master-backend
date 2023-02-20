@@ -1,8 +1,10 @@
 package com.example.hiringMaster;
 
 import com.example.hiringMaster.models.Activity;
+import com.example.hiringMaster.models.Job;
 import com.example.hiringMaster.models.Profile;
 import com.example.hiringMaster.repositories.ActivityRepository;
+import com.example.hiringMaster.repositories.JobRepository;
 import com.example.hiringMaster.repositories.ProfileRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.boot.CommandLineRunner;
@@ -11,7 +13,6 @@ import org.springframework.stereotype.Component;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 @Component
@@ -20,9 +21,12 @@ public class DatabaseLoader implements CommandLineRunner {
 
     private final ActivityRepository activityRepository;
     private final ProfileRepository profileRepository;
-    public DatabaseLoader(ProfileRepository profileRepository, ActivityRepository activityRepository) {
+    private final JobRepository jobRepository;
+
+    public DatabaseLoader(ProfileRepository profileRepository, ActivityRepository activityRepository, JobRepository jobRepository) {
         this.activityRepository = activityRepository;
         this.profileRepository = profileRepository;
+        this.jobRepository = jobRepository;
     }
 
     @Override
@@ -30,22 +34,22 @@ public class DatabaseLoader implements CommandLineRunner {
     public void run(String... args) throws Exception {
         SimpleDateFormat formatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH);
         // Create your objects here
-        var p1 = new Profile().builder()
+        var p1 = Profile.builder()
                 .name("Victorine Goethiers")
                 .email("victorine@email.com")
                 .phone("0701222948")
                 .build();
-        var p2 = new Profile().builder()
+        var p2 = Profile.builder()
                 .name("Autre Activités")
                 .email("autre@email.com")
                 .phone("0701222948")
                 .build();
-        var p3 = new Profile().builder()
+        var p3 = Profile.builder()
                 .name("Ronald FOX")
                 .email("autre@email.com")
                 .phone("0701222948")
                 .build();
-        var p4 = new Profile().builder()
+        var p4 = Profile.builder()
                 .name("Eduardo COOPER")
                 .email("autre@email.com")
                 .phone("0701222948")
@@ -56,7 +60,20 @@ public class DatabaseLoader implements CommandLineRunner {
 //        System.out.println(p2);
 //        System.out.println(p3);
 //        System.out.println(p4);
-        var mockActivity = new Activity().builder()
+        var fullstackJob = Job.builder()
+                .title("Developeur Fullstack")
+                .parentJob(null)
+                .build();
+        var reactjavaJob = Job.builder()
+                .title("Developeur Fullstack java / react")
+                .parentJob(fullstackJob)
+                .build();
+        var angularjavaJob = Job.builder()
+                .title("Developeur Fullstack angular / java")
+                .parentJob(fullstackJob)
+                .build();
+        jobRepository.saveAll(Arrays.asList(fullstackJob,angularjavaJob,reactjavaJob));
+        var mockActivity = Activity.builder()
                 .visibility("public")
                 .comment("This is a comment")
                 .title("Réunion le 04 mai 2021")
@@ -66,7 +83,7 @@ public class DatabaseLoader implements CommandLineRunner {
                 .description("This is a description")
                 .owner(p1)
                 .subActivities("Don't mind me")
-                .job("Developeur Fullstack java / react")
+                .job(reactjavaJob)
                 .address("paris")
                 .medium("phone")
                 .type("HR")
@@ -79,6 +96,7 @@ public class DatabaseLoader implements CommandLineRunner {
                 .activityType(Activity.ActivityTypes.REMINDER)
                 .participants(Arrays.asList(p1,p2))
                 .deadline(formatter.parse("7-Jun-2013"))
+                .job(fullstackJob)
                 .build();
         var a3 = mockActivity
                 .title("Preparer questions pour entretien d'aumbauche")
@@ -114,6 +132,7 @@ public class DatabaseLoader implements CommandLineRunner {
                 .activityType(Activity.ActivityTypes.REUNION)
                 .finished(true)
                 .owner(p2)
+                .job(angularjavaJob)
                 .build();
         var a9 = mockActivity
                 .title("Interview le 5 avr. 2021")
