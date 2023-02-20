@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,6 +61,30 @@ public class ProfileController {
        return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(new ArrayList<>());
+
+    }
+    @GetMapping("/candidate")
+    public ResponseEntity<List<Profile>> getCandidate(
+            @RequestParam(required = true) Long activityId,
+            @RequestParam(required = false, defaultValue="false") Boolean other
+    ){
+        if (other){
+            var candidates = this.profileService.getOtherCandidatsByActivityId(activityId);
+            return ResponseEntity
+                    .status(HttpStatus.OK)
+                    .body(candidates);
+        }
+        else{
+            var activity = this.activityService.getActivitiyById(activityId);
+            if (activity.isPresent() && activity.get().getCandidate() !=null) {
+                return ResponseEntity
+                        .status(HttpStatus.OK)
+                        .body(new ArrayList<Profile>(Arrays.asList(activity.get().getCandidate())));
+            }
+        }
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(new ArrayList<Profile>());
 
     }
 

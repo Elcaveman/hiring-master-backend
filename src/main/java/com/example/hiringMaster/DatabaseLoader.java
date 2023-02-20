@@ -82,7 +82,7 @@ public class DatabaseLoader implements CommandLineRunner {
                 .build();
         var a3 = mockActivity
                 .title("Preparer questions pour entretien d'aumbauche")
-                .activityType(Activity.ActivityTypes.REMINDER)
+                .activityType(Activity.ActivityTypes.TASK)
                 .deadline(formatter.parse("01-Jan-2025"))
                 .build();
         var a4 = mockActivity

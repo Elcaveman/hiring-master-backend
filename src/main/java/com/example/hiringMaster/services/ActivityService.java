@@ -56,6 +56,7 @@ public class ActivityService {
 //                mapper -> mapper.using(this.profileDtoToProfileConverter)
 //                        .map(ActivityDto::getCandidate, Activity::setCandidate)
 //        );
+        // TODO: check the source of data ( is it the DTO default values or did the user actually set then to null )
         Optional<Activity> originalActivity = activityRepository.findById(activityDto.getId());
         if ( originalActivity.isPresent()){
             Activity a = originalActivity.get();
@@ -64,16 +65,17 @@ public class ActivityService {
             // TODO: set composite fields (Entities) automatically
             List<Profile> participants = new ArrayList<>();
             Profile candidate = null;
-            if(activityDto.getCandidate()!=null)
+            if(activityDto.getCandidate()!=null){
                 candidate = this.profileRepository.findById(activityDto.getCandidate().getId()).orElse(null);
-
-            if (activityDto.getParticipants()!=null)
+                copyActivity.setCandidate(candidate);
+            }
+            if (activityDto.getParticipants()!=null && activityDto.getParticipants().size()>0){
                 participants = this.profileRepository.findAllById(activityDto.getParticipants()
                         .stream().map(participant->participant.getId())
                         .collect(Collectors.toList())
                 );
-            copyActivity.setCandidate(candidate);
-            copyActivity.setParticipants(participants);
+                copyActivity.setParticipants(participants);
+            }
             activityRepository.save(copyActivity);
         }
     }

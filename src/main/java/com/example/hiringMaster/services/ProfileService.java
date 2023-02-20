@@ -33,4 +33,9 @@ public class ProfileService {
         List<Profile> otherParticipants = this.profileRepository.findParticipantsNotInActivityId(activityId);
         return otherParticipants;
     }
+
+    public List<Profile> getOtherCandidatsByActivityId(Long activityId) {
+        List<Profile> otherCandidates = this.profileRepository.findCandidatesNotInActivityId(activityId);
+        return otherCandidates;
+    }
 }
