@@ -4,7 +4,9 @@ import com.example.hiringMaster.mapper.CustomModelMapper;
 import com.example.hiringMaster.dto.activity.ActivityDto;
 import com.example.hiringMaster.dto.profile.ProfileIdDto;
 import com.example.hiringMaster.models.Activity;
+import com.example.hiringMaster.models.Job;
 import com.example.hiringMaster.models.Profile;
+import com.example.hiringMaster.repositories.JobRepository;
 import com.example.hiringMaster.repositories.ProfileRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
@@ -25,13 +27,15 @@ public class ActivityService {
     private final ModelMapper mapper = CustomModelMapper.modelMapper();
     private TypeMap<ActivityDto,Activity> dto2ActivityTypeMap;
     private TypeMap<ProfileIdDto,Profile> dto2ProfileTypeMap;
+    private JobRepository jobRepository;
 //    private final ProfileIdDtoToProfileConverter profileDtoToProfileConverter;
 //    private final ProfileIdDtoListToProfileConverter profileIdDtoListToProfileConverter;
 
     @Autowired
-    public ActivityService(ActivityRepository activityRepository, ProfileRepository profileRepository) {
+    public ActivityService(ActivityRepository activityRepository, ProfileRepository profileRepository, JobRepository jobRepository) {
         this.profileRepository = profileRepository;
         this.activityRepository = activityRepository;
+        this.jobRepository = jobRepository;
 //        this.dto2ActivityTypeMap =  this.mapper.createTypeMap(ActivityDto.class, Activity.class);
 //        this.dto2ProfileTypeMap =  this.mapper.createTypeMap(ProfileIdDto.class, Profile.class);
     }
@@ -65,6 +69,7 @@ public class ActivityService {
             // TODO: set composite fields (Entities) automatically
             List<Profile> participants = new ArrayList<>();
             Profile candidate = null;
+            Job job = null;
             if(activityDto.getCandidate()!=null){
                 candidate = this.profileRepository.findById(activityDto.getCandidate().getId()).orElse(null);
                 copyActivity.setCandidate(candidate);
@@ -75,6 +80,10 @@ public class ActivityService {
                         .collect(Collectors.toList())
                 );
                 copyActivity.setParticipants(participants);
+            }
+            if (activityDto.getJob()!=null){
+                job = this.jobRepository.findById(activityDto.getJob().getId()).orElse(null);
+                copyActivity.setJob(job);
             }
             activityRepository.save(copyActivity);
         }

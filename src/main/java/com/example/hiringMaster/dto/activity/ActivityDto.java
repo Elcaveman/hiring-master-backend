@@ -2,6 +2,7 @@ package com.example.hiringMaster.dto.activity;
 
 import com.example.hiringMaster.dto.profile.ProfileIdDto;
 import com.example.hiringMaster.models.Activity;
+import com.example.hiringMaster.models.Job;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +24,7 @@ public class ActivityDto {
     private ProfileIdDto owner;// should be fetched from userPrincipal
     private ProfileIdDto candidate;
     private String subActivities;
-    private String job;
+    private Job job;
     private String address;
     private String medium;//add medium validation
     private String type;//add medium validation
